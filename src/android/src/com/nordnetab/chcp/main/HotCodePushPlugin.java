@@ -254,8 +254,10 @@ public class HotCodePushPlugin extends CordovaPlugin {
             jsIsUpdateAvailableForInstallation(callbackContext);
         } else if (JSAction.GET_VERSION_INFO.equals(action)) {
             jsGetVersionInfo(callbackContext);
+        } else if(JSAction.CLEAR_INTERNAL_PREFERENCES.equals(action)){
+            jsClearInternalPreferences();
         } else {
-            cmdProcessed = false;
+          cmdProcessed = false;
         }
 
         return cmdProcessed;
@@ -345,6 +347,17 @@ public class HotCodePushPlugin extends CordovaPlugin {
         }
 
         fetchUpdate(callback, fetchOptions);
+    }
+
+    /**
+     * Before install apk you need to clear data stored in internal preferences.
+     * So the plugin will load www folder inside the apk.
+     * Otherwise the plugin will load old www folder of which release version is older than apk.
+     */
+    private void jsClearInternalPreferences(){
+      Log.d("CHCP","ClearInternalPreferences");
+      PluginInternalPreferences config = PluginInternalPreferences.createDefault(cordova.getActivity());
+      pluginInternalPrefsStorage.storeInPreference(config);
     }
 
     /**

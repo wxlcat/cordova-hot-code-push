@@ -14,7 +14,8 @@ var exec = require('cordova/exec'),
     CONFIGURE: 'jsConfigure',
     REQUEST_APP_UPDATE: 'jsRequestAppUpdate',
     IS_UPDATE_AVAILABLE_FOR_INSTALLATION: 'jsIsUpdateAvailableForInstallation',
-    GET_INFO: 'jsGetVersionInfo'
+    GET_INFO: 'jsGetVersionInfo',
+    CLEAR_INTERNAL_PREFERENCES:"jsClearInternalPreferences"
   };
 
 // Called when Cordova is ready for work.
