@@ -275,6 +275,10 @@ var chcp = {
    */
   getVersionInfo: function(callback) {
     callNativeMethod(pluginNativeMethod.GET_INFO, null, callback);
+  },
+
+  clearInternalPreferences: function(){
+    callNativeMethod(pluginNativeMethod.CLEAR_INTERNAL_PREFERENCES, null, null);
   }
 };
 
