@@ -355,9 +355,10 @@ public class HotCodePushPlugin extends CordovaPlugin {
      * Otherwise the plugin will load old www folder of which release version is older than apk.
      */
     private void jsClearInternalPreferences(){
-      Log.d("CHCP","ClearInternalPreferences");
       PluginInternalPreferences config = PluginInternalPreferences.createDefault(cordova.getActivity());
+      config.setCurrentReleaseVersionName("");
       pluginInternalPrefsStorage.storeInPreference(config);
+      Log.d("CHCP", "ClearInternalPreferences:" + config.getCurrentReleaseVersionName());
     }
 
     /**
