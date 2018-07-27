@@ -27,9 +27,12 @@ static NSString *const READY_FOR_INSTALLATION_RELEASE_VERSION_NAME = @"ready_for
     pluginConfig.wwwFolderInstalled = NO;
     pluginConfig.previousReleaseVersionName = @"";
     pluginConfig.readyForInstallationReleaseVersionName = @"";
+    pluginConfig.currentReleaseVersionName = @"";
     
     HCPApplicationConfig *config = [HCPApplicationConfig configFromBundle:[HCPFilesStructure defaultConfigFileName]];
-    pluginConfig.currentReleaseVersionName = config.contentConfig.releaseVersion;
+    if(config != nil){
+      pluginConfig.currentReleaseVersionName = config.contentConfig.releaseVersion;
+    }
     
     return pluginConfig;
 }
