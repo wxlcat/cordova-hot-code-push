@@ -149,10 +149,56 @@ static NSString *const DEFAULT_STARTING_PAGE = @"index.html";
         [_pluginInternalPrefs saveToUserDefaults];
     }
     
+    [self compareApkVersionWithChcpVersion];
+    
     NSLog(@"Currently running release version %@", _pluginInternalPrefs.currentReleaseVersionName);
     
     // init file structure for www files
     _filesStructure = [[HCPFilesStructure alloc] initWithReleaseVersion:_pluginInternalPrefs.currentReleaseVersionName];
+}
+
+- (void)compareApkVersionWithChcpVersion{
+    HCPApplicationConfig *config = [HCPApplicationConfig configFromBundle:[HCPFilesStructure defaultConfigFileName]];
+    if(config != nil){
+        NSString *appVersion = config.contentConfig.releaseVersion;
+        NSString *preferenceVersion = _pluginInternalPrefs.currentReleaseVersionName;
+        
+        NSArray *arr1 = [appVersion componentsSeparatedByString:@"."];
+        NSArray *arr2 = [preferenceVersion componentsSeparatedByString:@"."];
+        
+        NSString *v1 = @"";
+        for(int i=0; i<arr1.count; i++){
+            v1 = [v1 stringByAppendingString:arr1[i]];
+            v1 = [v1 stringByAppendingString:@" "];
+        }
+        NSLog(@"appVersion=%@", v1);
+        
+        NSString *v2 = @"";
+        for(int i=0; i<arr2.count; i++){
+            v2 = [v2 stringByAppendingString:arr2[i]];
+            v2 = [v2 stringByAppendingString:@" "];
+        }
+        NSLog(@"preferenceVersion=%@", v2);
+        
+        if([arr1 count] != [arr2 count]){
+            NSLog(@"appVersion.count != preferenceVersion.count");
+            return;
+        }
+        
+        for(int i=0; i<arr1.count; i++){
+            int v1 = [arr1[i] intValue];
+            int v2 = [arr2[i] intValue];
+            if(v1 > v2){
+                [_pluginInternalPrefs setCurrentReleaseVersionName:appVersion];
+                [_pluginInternalPrefs setPreviousReleaseVersionName:@""];
+                [_pluginInternalPrefs setWwwFolderInstalled:false];
+                [_pluginInternalPrefs setReadyForInstallationReleaseVersionName:@""];
+                [_pluginInternalPrefs saveToUserDefaults];
+                NSLog(@"App Version is newer than cache, rest! %@ %@", appVersion, preferenceVersion);
+                break;
+            }
+        }
+    }
 }
 
 /**
