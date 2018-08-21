@@ -244,8 +244,8 @@ public class HotCodePushPlugin extends CordovaPlugin {
 
           Log.d("CHCP", "compareApkVersionWithChcpVersion " + "apkVersion=" + apkVersion + " preVersion=" + preferenceVersion);
 
-          String[] arrApk = apkVersion.split(".");
-          String[] arrPre = preferenceVersion.split(".");
+          String[] arrApk = apkVersion.split("\\.");
+          String[] arrPre = preferenceVersion.split("\\.");
 
           
           String v1 = "";
