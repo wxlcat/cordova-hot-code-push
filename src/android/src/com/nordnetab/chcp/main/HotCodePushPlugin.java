@@ -266,7 +266,9 @@ public class HotCodePushPlugin extends CordovaPlugin {
           }
 
           for(int i=0; i<arrApk.length; i++){
-            if(arrApk[i] > arrPre[i]){
+            int n1 = Integer.parseInt(arrApk[i]);
+            int n2 = Integer.parseInt(arrPre[i]);
+            if(n1 > n2){
               pluginInternalPrefs.setCurrentReleaseVersionName(apkVersion);
               pluginInternalPrefs.setPreviousReleaseVersionName("");
               pluginInternalPrefs.setWwwFolderInstalled(false);
