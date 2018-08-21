@@ -93,6 +93,7 @@ public class HotCodePushPlugin extends CordovaPlugin {
 
         parseCordovaConfigXml();
         loadPluginInternalPreferences();
+        compareApkVersionWithChcpVersion();
 
         Log.d("CHCP", "Currently running release version " + pluginInternalPrefs.getCurrentReleaseVersionName());
 
@@ -234,6 +235,50 @@ public class HotCodePushPlugin extends CordovaPlugin {
     }
 
     // endregion
+
+    private void compareApkVersionWithChcpVersion(){
+      final ApplicationConfig appConfig = ApplicationConfig.configFromAssets(cordova.getActivity(), PluginFilesStructure.CONFIG_FILE_NAME);
+        if (appConfig != null) {
+          String apkVersion = appConfig.getContentConfig().getReleaseVersion();
+          String preferenceVersion = pluginInternalPrefs.getCurrentReleaseVersionName();
+
+          Log.d("CHCP", "compareApkVersionWithChcpVersion " + "apkVersion=" + apkVersion + " preVersion=" + preferenceVersion);
+
+          String[] arrApk = apkVersion.split(".");
+          String[] arrPre = preferenceVersion.split(".");
+
+          
+          String v1 = "";
+          for(int i=0; i<arrApk.length; i++){
+            v1 += arrApk[i] + " ";
+          }
+          Log.d("CHCP", "arrApk=" + v1);
+
+          String v2 = "";
+          for(int i=0; i<arrPre.length; i++){
+            v2 += arrPre[i] + " ";
+          }
+          Log.d("CHCP", "arrPre=" + v2);
+
+          if(arrApk.length != arrPre.length){
+            Log.d("CHCP","arrApk.length != arrPre.length");
+            return;
+          }
+
+          for(int i=0; i<arrApk.length; i++){
+            if(arrApk[i] > arrPre[i]){
+              pluginInternalPrefs.setCurrentReleaseVersionName(apkVersion);
+              pluginInternalPrefs.setPreviousReleaseVersionName("");
+              pluginInternalPrefs.setWwwFolderInstalled(false);
+              pluginInternalPrefs.setReadyForInstallationReleaseVersionName("");
+              pluginInternalPrefsStorage.storeInPreference(pluginInternalPrefs);
+              Log.d("CHCP", "Version in apk is newer than cache! Reset" + apkVersion + " > " + preferenceVersion);
+              break;
+            }              
+          }
+        }
+
+    }
 
     // region JavaScript processing
 
